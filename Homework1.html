@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+	<style>
+		* {
+			margin: 0px;
+			padding: 0px;
+		}
+		#slide {
+			width: 200px;
+			height: 200px;
+		}
+		#slide img{
+			width: 200px;
+			height: 200px;
+		}
+
+		#wrapper {
+			margin: 20px;
+			overflow: hidden;
+		}
+		#images img {
+			width: 50px;
+			height: 50px;
+		}
+		#buttons {
+			margin-left: 35px;
+		}
+		input {
+			width: 60px;
+			padding: 5px;
+		}
+	</style>
+<body>
+	<div id="slide">
+
+	</div>
+	<div id="wrapper">
+		<div id="images">
+			<img src="images/1.png" alt="Картинка">
+			<img src="images/2.png" alt="Картинка">
+			<img src="images/3.png" alt="Картинка">
+			<img src="images/4.png" alt="Картинка">
+			<img src="images/5.png" alt="Картинка">
+		</div>
+	</div>
+	<div id="buttons">
+		<input type="button" value="previous" >
+		<input type="button" value="next" >
+	</div>
+		<script>
+			function Slider(n){
+				this.slide = document.querySelector('#slide');
+				this.images = document.querySelector('#images');
+
+				this.count = this.images.children.length;
+				this.imgWidth = this.images.firstElementChild.width;
+				this.width = this.imgWidth * (this.count + 1);
+				this.wrapper = document.querySelector('#wrapper');
+				this.buttons = document.querySelector('#buttons');
+				this.images.style.width = this.width + 'px';
+				this.showElCount = n;
+				this.wrapper.style.width = (this.imgWidth * this.showElCount) + 'px';
+				this.slide.insertAdjacentHTML('beforeEnd','<img src="images/1.png" alt="Картинка">');
+				this.images.firstElementChild.style.opacity = 0.30;
+
+				this.images.addEventListener('click', this.imagesFun.bind(this));
+				this.buttons.addEventListener('click', this.buttonFun.bind(this));
+			}
+
+			Slider.prototype.imagesFun = function(){
+				for(var i = 0; i < this.images.children.length; i++){
+					if(this.images.children[i].style.opacity) images.children[i].removeAttribute('style');
+				}
+				var target = event && event.target || srcElement;
+				var attr = target.getAttribute('src');
+				if (!attr) return;
+				target.style.opacity = 0.30;
+				this.element(attr);
+			}
+
+			Slider.prototype.buttonFun = function(){
+				var target = event && event.target || srcElement;
+				var attr = target.getAttribute('value');
+				if (!attr) return;
+				if (attr == 'next'){
+					for (var i = 0; i < this.count; i++){
+						if (this.images.children[i].style.opacity) {
+							this.images.children[i].removeAttribute('style');
+							this.images.children[++i].style.opacity = 0.30;
+							var src = this.images.children[i].src;
+							this.element(src);
+
+						if (i == this.showElCount){
+							var clone = this.images.firstElementChild.cloneNode();
+							console.log(clone);
+							this.images.style.left = -this.imgWidth + 'px';
+							this.images.appendChild(clone);
+							this.images.removeChild(this.images.firstElementChild);
+							this.images.style.left = 0 + 'px';
+						}
+
+						};
+					}
+				}
+				if (attr == 'previous'){
+					if (this.images.children[0].style.opacity){
+							this.images.children[0].removeAttribute('style');
+							var clone = this.images.lastElementChild.cloneNode();
+							this.images.insertBefore(clone, this.images.firstElementChild);
+							this.images.removeChild(this.images.lastElementChild);
+							var src = clone.src;
+							clone.style.opacity = 0.30;
+							this.element(src);
+						}
+					else {
+						for (var i = 0; i < this.count; i++){
+							if (this.images.children[i].style.opacity) {
+								this.images.children[i].removeAttribute('style');
+								this.images.children[--i].style.opacity = 0.30;
+								var src = this.images.children[i].src;
+								this.element(src);
+							}
+						}
+					}
+				}
+			}
+			Slider.prototype.element = function(target){
+				if (this.slide.firstElementChild) this.slide.removeChild(this.slide.firstElementChild);
+				this.slide.insertAdjacentHTML('beforeEnd','<img src=\"'+ target + '\" alt="Картинка">');
+			}
+			new Slider(3);
+		</script>
+	</div>
+</body>
+</html>
